@@ -89,13 +89,13 @@ module.exports = function(theme, env, app){
             paramArray.sort((a, b) => {
                 if(a.required === b.required) { return 0; }
                 else {
-                    if(a.required) { return 1; }
-                    else { return -1; }
+                    if(a.required) { return -1; }
+                    else { return 1; }
                 }
             });
             return paramArray;
         }
-        const paramData = yamljs.load(filePath).params;
+        let paramData = yamljs.load(filePath).params;
         paramData = sortParams(paramData);
         paramData.forEach((obj) => {
             if(obj.params) {
