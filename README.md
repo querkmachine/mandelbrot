@@ -1,5 +1,5 @@
 # Mandelbrot
 
-The default web UI theme for Fractal.
+A tiny fork of Fractal's [Mandelbrot](https://github.com/frctl/mandelbrot) theme that adds and tweaks a few bits:
 
-See the Fractal [documentation](http://fractal.build/guide) for details on configuration and usage.
+* Adds a 'params' component panel that displays documentation from a params.yaml file.

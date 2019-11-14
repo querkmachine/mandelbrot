@@ -3,7 +3,7 @@
 const _            = require('lodash');
 const Path         = require('path');
 const beautifyHTML = require('js-beautify').html;
-
+const yamljs       = require('yamljs');
 
 module.exports = function(theme, env, app){
 
@@ -75,6 +75,10 @@ module.exports = function(theme, env, app){
                 return handle;
             }
         });
+    });
+
+    env.engine.addFilter('yaml2Json', function(filePath) {
+        return yamljs.load(filePath);
     });
 
  };
