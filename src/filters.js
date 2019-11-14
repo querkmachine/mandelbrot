@@ -77,8 +77,29 @@ module.exports = function(theme, env, app){
         });
     });
 
-    env.engine.addFilter('yaml2Json', function(filePath) {
-        return yamljs.load(filePath);
+    env.engine.addFilter('loadParams', function(filePath) {
+        function sortParams(paramArray) {
+            // Sort alphabetically
+            paramArray.sort((a, b) => {
+                if(a.name < b.name) { return -1; }
+                else if(a.name > b.name) { return 1; }
+                else { return 0; }
+            });
+            // Bring required parameters to the top
+            paramArray.sort((a, b) => {
+                if(a.required === b.required) { return 0; }
+                else {
+                    if(a.required) { return 1; }
+                    else { return -1; }
+                }
+            });
+        }
+        const paramData = yamljs.load(filePath).params;
+        sortParams(paramData);
+        paramData.forEach((obj) => {
+            obj.params = sortParams(obj.params);
+        });
+        return paramData;
     });
 
  };

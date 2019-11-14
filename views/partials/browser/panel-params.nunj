@@ -23,9 +23,9 @@
         {% if collection.size %}
             {% for resource in collection.items() %}
                 {% if resource.base === 'params.yaml' %}
-                    {% set paramData = (resource.path | yaml2Json) %}
+                    {% set paramData = (resource.path | loadParams) %}
                     <div class="Prose Prose--condensed">
-                        {% for param in paramData.params %}
+                        {% for param in paramData %}
                             {{ paramInfo(param) }}
                         {% endfor %}
                     </div>
