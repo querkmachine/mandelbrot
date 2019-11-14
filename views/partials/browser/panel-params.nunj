@@ -1,0 +1,40 @@
+{% set compHandle = entity.component().handle %}
+
+{% macro paramInfo(param) %}
+<section class="Param">
+    <header class="Param-header">
+        <code class="Param-name">{{ param.name }}</code>
+        <span class="Param-type">({{ param.type }})</span>
+    </header>
+    <div class="Prose Prose--condensed Param-description">
+        <p>
+            {% if param.required %}<strong>Required.</strong>{% endif %}
+            {{ param.description if param.description }}
+        </p>
+    </div>
+    {% if param.params %}
+        {% for childParam in param.params %}
+            {{ paramInfo(childParam) }}
+        {% endfor %}
+    {% endif %}
+</section>
+{% endmacro %}
+
+<div class="Browser-panel Browser-params" data-role="tab-panel" id="browser-{{ entity.id }}-panel-params">
+    {% for collection in entity.resources().items() %}
+        {% if collection.size %}
+            {% for resource in collection.items() %}
+                {% if resource.base === 'params.yaml' %}
+                    {% set paramData = (resource.path | yaml2Json) %}
+                    {% for param in paramData.params %}
+                        {{ paramInfo(param) }}
+                    {% endfor %}
+                {% else %}
+                    <div class="Prose Prose--condensed">
+                        <p><em>No parameters file found.</em></p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</div>
