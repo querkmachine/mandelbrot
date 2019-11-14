@@ -6,7 +6,7 @@
         <code class="Param-name">{{ param.name }}</code>
         <span class="Param-type">({{ param.type }})</span>
     </header>
-    <div class="Prose Prose--condensed Param-description">
+    <div class="Param-description">
         <p>
             {% if param.required %}<strong>Required.</strong>{% endif %}
             {{ param.description if param.description }}
@@ -26,12 +26,10 @@
             {% for resource in collection.items() %}
                 {% if resource.base === 'params.yaml' %}
                     {% set paramData = (resource.path | yaml2Json) %}
-                    {% for param in paramData.params %}
-                        {{ paramInfo(param) }}
-                    {% endfor %}
-                {% else %}
                     <div class="Prose Prose--condensed">
-                        <p><em>No parameters file found.</em></p>
+                        {% for param in paramData.params %}
+                            {{ paramInfo(param) }}
+                        {% endfor %}
                     </div>
                 {% endif %}
             {% endfor %}
