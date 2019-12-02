@@ -93,15 +93,15 @@ module.exports = function(theme, env, app){
                     else { return 1; }
                 }
             });
+            paramArray.forEach((obj) => {
+                if(obj.params) {
+                    obj.params = sortParams(obj.params);
+                }
+            })
             return paramArray;
         }
         let paramData = yamljs.load(filePath).params;
         paramData = sortParams(paramData);
-        paramData.forEach((obj) => {
-            if(obj.params) {
-                obj.params = sortParams(obj.params);
-            }
-        });
         return paramData;
     });
 
