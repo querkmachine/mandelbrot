@@ -5,9 +5,10 @@
     <table width="100%">
         <thead>
             <tr>
-                <th width="20%" scope="col">Name</th>
-                <th width="20%" scope="col">Type</th>
-                <th width="60%" scope="col">Notes</th>
+                <th width="15%" scope="col">Name</th>
+                <th width="15%" scope="col">Type</th>
+                <th width="15%" scope="col">Default</th>
+                <th width="55%" scope="col">Notes</th>
             </tr>
         </thead>
         <tbody>
@@ -30,6 +31,7 @@
     <tr>
         <td valign="top" scope="row"><code>{{ param.name }}</code></td>
         <td valign="top">{{ param.type }}</td>
+        <td valign="top">{{ defaultVal | markdown }}</td>
         <td valign="top">
             {% if param.required %}<strong>Required.</strong>{% endif %}
             {{ (param.description | markdown) if param.description }}
