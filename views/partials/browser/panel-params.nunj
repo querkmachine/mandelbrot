@@ -1,0 +1,73 @@
+{% set compHandle = entity.component().handle %}
+
+{% macro _paramTable(paramData, heading = '') %}
+    {% if heading %}<h2>{{ heading }}</h2>{% endif %}
+    <table width="100%">
+        <thead>
+            <tr>
+                <th width="20%" scope="col">Name</th>
+                <th width="20%" scope="col">Type</th>
+                <th width="60%" scope="col">Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for param in paramData %}
+                {{ _paramRow(param) }}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
+
+{% macro _paramRow(param) %}
+    {% set defaultVal %}
+        {%- if param.default %}{{ param.default }}
+        {%- elif param.type == 'boolean' %}`false`
+        {%- elif param.type == 'string' %}`''`
+        {%- elif param.type == 'object' %}`{}`
+        {%- elif param.type == 'array' %}`[]`
+        {%- else %}`undefined`{% endif -%}
+    {% endset %}
+    <tr>
+        <td valign="top" scope="row"><code>{{ param.name }}</code></td>
+        <td valign="top">{{ param.type }}</td>
+        <td valign="top">
+            {% if param.required %}<strong>Required.</strong>{% endif %}
+            {{ (param.description | markdown) if param.description }}
+            {% if param.seeAlso %}
+                <p>
+                    See: {{ param.seeAlso | linkComponentsByHandle }}
+                </p>
+            {% endif %}
+        </td>
+    </tr>
+{% endmacro %}
+
+<div class="Browser-panel Browser-params" data-role="tab-panel" id="browser-{{ entity.id }}-panel-params">
+    {% for collection in entity.resources().items() %}
+        {% if collection.size %}
+            {% for resource in collection.items() %}
+                {% if resource.base === 'params.yaml' %}
+                    {% set paramData = (resource.path | loadParams) %}
+                    {% set paramsWithChildren = (paramData.params | paramsWithChildren) %}
+                    <div class="Prose">
+                        {% if paramData.caller %}
+                            <h2>Call data</h2>
+                            <p>This component accepts <strong>call</strong> data. Arbitrary text, HTML or even other components can be passed into this component by <a href="https://mozilla.github.io/nunjucks/templating.html#call">calling it</a>.</p>
+                            {{ _paramTable([{
+                                name: '',
+                                type: 'string',
+                                description: paramData.caller
+                            }]) }}
+                        {% endif %}
+                        {{ _paramTable(paramData.params, 'Parameters') }}
+                        {% if paramsWithChildren %}
+                            {% for param in paramsWithChildren %}
+                                {{ _paramTable(param.params, 'Parameters for <code>' + param.name + '</code>') }}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</div>

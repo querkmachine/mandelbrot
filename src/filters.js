@@ -3,7 +3,7 @@
 const _            = require('lodash');
 const Path         = require('path');
 const beautifyHTML = require('js-beautify').html;
-
+const yamljs       = require('yamljs');
 
 module.exports = function(theme, env, app){
 
@@ -75,6 +75,46 @@ module.exports = function(theme, env, app){
                 return handle;
             }
         });
+    });
+
+    env.engine.addFilter('loadParams', function(filePath) {
+        function sortParams(paramArray) {
+            // Sort alphabetically
+            paramArray.sort((a, b) => {
+                if(a.name < b.name) { return -1; }
+                else if(a.name > b.name) { return 1; }
+                else { return 0; }
+            });
+            // Bring required parameters to the top
+            paramArray.sort((a, b) => {
+                if(a.required === b.required) { return 0; }
+                else {
+                    if(a.required) { return -1; }
+                    else { return 1; }
+                }
+            });
+            paramArray.forEach((obj) => {
+                if(obj.params) {
+                    obj.params = sortParams(obj.params);
+                }
+            })
+            return paramArray;
+        }
+        let paramData = yamljs.load(filePath).params;
+        paramData = sortParams(paramData);
+        return paramData;
+    });
+
+    env.engine.addFilter('paramsWithChildren', function(params) {
+        return params.filter(paramGroup => typeof paramGroup.params !== 'undefined');
+    });
+
+    env.engine.addFilter('linkComponentsByHandle', function(handleArray) {
+        let returnStrings = [];
+        handleArray.forEach((handle) => {
+            returnStrings.push(`<a href="${theme.urlFromRoute('component', {handle: handle})}">${handle}</a>`);
+        });
+        return returnStrings.join(', ');
     });
 
  };
