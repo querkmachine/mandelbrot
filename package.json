@@ -1,16 +1,16 @@
 {
   "name": "@frctl/mandelbrot",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "The default theme for Fractal.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/frctl/mandelbrot.git"
+    "url": "https://github.com/querkmachine/mandelbrot.git"
   },
   "bugs": {
-    "url": "https://github.com/frctl/mandelbrot/issues"
+    "url": "https://github.com/querkmachine/mandelbrot/issues"
   },
-  "author": "Mark Perkins <mark@clearleft.com> (http://clearleft.com/)",
+  "author": "Kimberly Grey <hi@berly.kim>",
   "license": "MIT",
   "scripts": {
     "start": "gulp watch",
