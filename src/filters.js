@@ -105,4 +105,16 @@ module.exports = function(theme, env, app){
         return paramData;
     });
 
+    env.engine.addFilter('paramsWithChildren', function(params) {
+        return params.filter(paramGroup => typeof paramGroup.params !== 'undefined');
+    });
+
+    env.engine.addFilter('linkComponentsByHandle', function(handleArray) {
+        let returnStrings = [];
+        handleArray.forEach((handle) => {
+            returnStrings.push(`<a href="${theme.urlFromRoute('component', {handle: handle})}">${handle}</a>`);
+        });
+        return returnStrings.join(', ');
+    });
+
  };
