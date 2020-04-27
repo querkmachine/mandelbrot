@@ -100,12 +100,14 @@ module.exports = function(theme, env, app){
             })
             return paramArray;
         }
-        let paramData = yamljs.load(filePath).params;
-        paramData = sortParams(paramData);
+        let paramData = yamljs.load(filePath);
+        if(!paramData) { return {}; }
+        paramData.params = sortParams(paramData.params);
         return paramData;
     });
 
     env.engine.addFilter('paramsWithChildren', function(params) {
+        if(!params) { return []; }
         return params.filter(paramGroup => typeof paramGroup.params !== 'undefined');
     });
 

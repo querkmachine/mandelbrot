@@ -50,24 +50,30 @@
             {% for resource in collection.items() %}
                 {% if resource.base === 'params.yaml' %}
                     {% set paramData = (resource.path | loadParams) %}
-                    {% set paramsWithChildren = (paramData.params | paramsWithChildren) %}
-                    <div class="Prose">
-                        {% if paramData.caller %}
-                            <h2>Call data</h2>
-                            <p>This component accepts <strong>call</strong> data. Arbitrary text, HTML or even other components can be passed into this component by <a href="https://mozilla.github.io/nunjucks/templating.html#call">calling it</a>.</p>
-                            {{ _paramTable([{
-                                name: '',
-                                type: 'string',
-                                description: paramData.caller
-                            }]) }}
-                        {% endif %}
-                        {{ _paramTable(paramData.params, 'Parameters') }}
-                        {% if paramsWithChildren %}
-                            {% for param in paramsWithChildren %}
-                                {{ _paramTable(param.params, 'Parameters for <code>' + param.name + '</code>') }}
-                            {% endfor %}
-                        {% endif %}
-                    </div>
+                    {% if not paramData.params.length %}
+                        <div class="Prose">
+                            <p><em>Failed to load parameter documentation.</em></p>
+                        </div>
+                    {% else %}
+                        {% set paramsWithChildren = (paramData.params | paramsWithChildren) %}
+                        <div class="Prose">
+                            {% if paramData.caller %}
+                                <h2>Call data</h2>
+                                <p>This component accepts <strong>call</strong> data. Arbitrary text, HTML or even other components can be passed into this component by <a href="https://mozilla.github.io/nunjucks/templating.html#call">calling it</a>.</p>
+                                {{ _paramTable([{
+                                    name: '',
+                                    type: 'string',
+                                    description: paramData.caller
+                                }]) }}
+                            {% endif %}
+                            {{ _paramTable(paramData.params, 'Parameters') }}
+                            {% if paramsWithChildren %}
+                                {% for param in paramsWithChildren %}
+                                    {{ _paramTable(param.params, 'Parameters for <code>' + param.name + '</code>') }}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
         {% endif %}
